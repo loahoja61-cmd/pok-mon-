@@ -1364,7 +1364,7 @@ function getMoves(type,level){const M=MOVES[type]||MOVES.normal;let L=type==='no
  if(L.length>4)L=L.slice(L.length-4);return L.map(m=>({...m}));}
 const stM=s=>s>=0?(2+s)/2:2/(2-s),sg=(c,k)=>stM((c.sg&&c.sg[k])||0);
 const spAtk=c=>c.sa??Math.round(c.atk*(.8+.4*h2(c.speciesId,1))),spDef=c=>c.sd??Math.round(c.def*(.8+.4*h2(c.speciesId,2)));
-const effSpd=c=>c.spd*sg(c,'spe')*(c.st==='par'?.5:1);
+let effSpd=c=>c.spd*sg(c,'spe')*(c.st==='par'?.5:1);
 function calcDamage(a,d,mv){const eff=effOf(mv.type,d.types||[d.type]);if(eff===0)return{value:0,eff:0,crit:false};
  const ph=(mv.cat||CATOF(mv.type))==='ph',A=ph?a.atk*sg(a,'atk')*(a.st==='brn'?.5:1):spAtk(a)*sg(a,'spa'),D=ph?d.def*sg(d,'def'):spDef(d)*sg(d,'sdf');
  const stab=(a.types||[a.type]).includes(mv.type)?1.5:1,crit=Math.random()<.0625?1.5:1;
@@ -8941,5 +8941,132 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden!important;overscr
 })();
 </script>
 
+<style id="hu-v103-legend-ui">
+@import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Reem+Kufi:wght@500;600;700&display=swap');
+/* v103 — هوية "عهد الحُماة": ألواح برونزية، ورق قديم، ختم قرمزي. لا أزرق، لا زجاج. */
+:root{
+--night:#150d0a;--deep:#241813;--deep2:#33241c;--gold:#e2b04a;--gold2:#b98532;--lagoon:#58b39e;--ember:#d4502f;
+--ink:#f1e4c6;--mute:#b6a58a;--line:rgba(226,176,74,.28);
+--bronze:#8f6a2c;--kohl:#120a07;--seal:#c4442b;--patina:#2f7d6d;--bone:#f0e2bf;--bone2:#dcc491;--inkd:#2a1a0d;
+--fd:'Reem Kufi','Cairo',system-ui,sans-serif;--ft:'Aref Ruqaa','Reem Kufi','Cairo',serif;
+--rv:radial-gradient(circle at 7px 7px,#e2b04a 1.4px,#0000 2.6px);
+--cut:polygon(9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px),0 9px);
+--star:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 64 64' fill='none' stroke='%23b98532' stroke-opacity='.14' stroke-width='1.2'%3E%3Cpath transform='rotate(-25 32 32)' d='M40 12A24 24 0 0 0 40 60A30 30 0 0 1 40 12Z'/%3E%3C/svg%3E");
+--emblem:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath transform='rotate(-25 32 32)' d='M40 8A28 28 0 0 0 40 64A35 35 0 0 1 40 8Z' fill='%23e2b04a' stroke='%23a8672a' stroke-width='1.5' stroke-linejoin='round'/%3E%3Ccircle cx='44' cy='32' r='5' fill='%23c4442b'/%3E%3C/svg%3E");
+--i-sword:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 4.5L20 3l1 1-1.5 5.5L9 20l-3-3zM4 17l3 3-3 1z'/%3E%3C/svg%3E");
+--i-bag:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 3h6l-1 3c3 2 5 6 5 10a5 5 0 01-5 5h-4a5 5 0 01-5-5c0-4 2-8 5-10z'/%3E%3C/svg%3E");
+--i-ball:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 2a10 10 0 110 20 10 10 0 010-20zm0 2a8 8 0 00-7.9 7H9a3 3 0 016 0h4.9A8 8 0 0012 4zm0 16a8 8 0 007.9-7H15a3 3 0 01-6 0H4.1A8 8 0 0012 20z'/%3E%3C/svg%3E");
+--i-shield:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z'/%3E%3C/svg%3E");
+--i-run:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 4h8v16h-8v-2h6V6h-6zM3 12l5-4v3h7v2H8v3z'/%3E%3C/svg%3E");
+--i-scroll:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 3h11a2 2 0 012 2v14l-3-2-3 2-3-2-3 2V5a2 2 0 012-2z'/%3E%3C/svg%3E");
+--i-book:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 3h13v15H7a2 2 0 00-2 2zM7 20h11v1H7z'/%3E%3C/svg%3E");
+--i-disk:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M5 3h11l3 3v15H5zm3 0v5h7V3zm0 10v6h8v-6z'/%3E%3C/svg%3E");
+--i-folk:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 11a3 3 0 100-6 3 3 0 000 6zm7 0a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM2 19c0-3 3-5 7-5s7 2 7 5zm14-4c3 0 6 1 6 4h-5c0-1.5-.5-3-1-4z'/%3E%3C/svg%3E");
+}
+*{scrollbar-width:thin;scrollbar-color:var(--bronze) #1b120e}
+html,body{background:#150d0a}
+h1,h2,.btn,#zoneBanner,.menuGrid button{letter-spacing:0!important}
+
+/* ===== الأسطح ===== */
+.screen:not(#titleScreen):not(#dialogScreen){background:var(--star),radial-gradient(130% 100% at 50% 0%,#3d2419,#150d0a 80%);backdrop-filter:none;-webkit-backdrop-filter:none}
+#dialogScreen{background:rgba(18,8,4,.7)!important}
+h2{font-family:var(--fd);font-weight:700;color:var(--gold);text-shadow:0 2px 0 #000b,0 0 18px rgba(226,176,74,.22)}
+.panel,.card,.mpCard,#mpScreen .mpCard,.settingsCard,.hu-social-card,#huSocialScreen .hu-social-card,.hx-pane,.hu-theme-card,#slotScreen>.list>.card,#pcScreen #pcHint,#slotScreen h2,#pcScreen>h2,#confirmScreen h2,.og-card,.hul-card{
+background:var(--rv) left top/14px 14px no-repeat,var(--rv) right top/14px 14px no-repeat,var(--rv) left bottom/14px 14px no-repeat,var(--rv) right bottom/14px 14px no-repeat,linear-gradient(180deg,#32241b,#1f1511);
+border:2px solid var(--bronze);border-radius:3px;
+box-shadow:inset 0 0 0 2px var(--kohl),inset 0 0 0 3px rgba(226,176,74,.3),0 8px 22px rgba(0,0,0,.55);backdrop-filter:none;-webkit-backdrop-filter:none}
+#slotScreen h2,#pcScreen>h2,#confirmScreen h2{color:var(--gold)}
+#battleMessage,#dialogBox{background:linear-gradient(var(--bone),var(--bone2))!important;color:var(--inkd)!important;border:2px solid #6b4a1e!important;border-radius:3px!important;text-shadow:none;
+box-shadow:inset 0 0 0 3px #f7edd2,inset 0 0 0 4px rgba(107,74,30,.55),0 10px 26px rgba(0,0,0,.6)!important}
+#dialogBox b,#battleMessage b{color:#8e2a22}
+
+/* ===== الأزرار: ألواح مشطوفة الزوايا ===== */
+.btn,.menuGrid button,.hx-x{font-family:var(--fd)!important;font-weight:700;color:var(--bone)!important;border:0!important;border-radius:0!important;clip-path:var(--cut);text-shadow:0 1px 0 #000b;
+background:linear-gradient(rgba(255,235,190,.13),rgba(0,0,0,.2)),#3b2a20!important;
+box-shadow:inset 0 0 0 2px var(--bronze),inset 0 0 0 3px var(--kohl)!important;transition:filter .12s,transform .08s}
+.btn:hover,.menuGrid button:hover{filter:brightness(1.18)}
+.btn:active,.menuGrid button:active{transform:translateY(2px);filter:brightness(.88);box-shadow:inset 0 0 0 2px var(--bronze),inset 0 0 0 3px var(--kohl)!important}
+.btn.gold{color:var(--inkd)!important;text-shadow:0 1px 0 rgba(255,240,200,.5);background:linear-gradient(rgba(255,255,255,.35),rgba(120,70,0,.12)),#e2b04a!important;box-shadow:inset 0 0 0 2px #7a4f10,inset 0 0 0 3px #f6dc98!important}
+.btn.red{background:linear-gradient(rgba(255,255,255,.16),rgba(0,0,0,.18)),#a6321f!important;box-shadow:inset 0 0 0 2px #e2b04a,inset 0 0 0 3px var(--kohl)!important}
+.btn.teal{background:linear-gradient(rgba(255,255,255,.16),rgba(0,0,0,.18)),var(--patina)!important;box-shadow:inset 0 0 0 2px #8fd4b4,inset 0 0 0 3px var(--kohl)!important}
+.btn:disabled{opacity:.45;filter:grayscale(.6)}
+.hx-act .btn.red{flex:0 0 40px}
+.btn:focus-visible,.hudBtns button:focus-visible,.menuGrid button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* ===== شاشة البداية ===== */
+#titleScreen{background:radial-gradient(ellipse at 50% 42%,rgba(20,9,4,.1) 0,rgba(20,9,4,.62) 62%,rgba(10,4,2,.94) 100%),linear-gradient(rgba(34,14,5,.28),rgba(20,8,3,.5))!important}
+#titleScreen h1{display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--ft);font-weight:700;font-size:clamp(54px,10vw,112px);line-height:1.12;
+background:linear-gradient(#fff2c6 10%,#e2b04a 50%,#a8672a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;
+filter:drop-shadow(0 4px 0 #3a1608) drop-shadow(0 0 30px rgba(226,150,60,.4))}
+#titleScreen h1::before{content:"";display:block;width:clamp(52px,11vh,88px);aspect-ratio:1;background:var(--emblem) center/contain no-repeat}
+#titleScreen>p{width:min(560px,90vw);border:0;border-block:1px solid rgba(226,176,74,.5);border-radius:0;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;padding:8px 0;color:var(--bone);text-shadow:0 2px 8px #000}
+.hu-title-worldbar span{border:0;border-radius:0;clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px);background:rgba(143,106,44,.28);box-shadow:inset 0 0 0 1px var(--bronze);color:var(--bone);font-family:var(--fd)}
+.hu-title-worldbar b{color:var(--gold)}
+#titleScreen .row .btn::after{display:none}
+.hu-theme-title{color:var(--gold);font-family:var(--fd)}.hu-theme-status,.hu-theme-volume{color:var(--mute)}
+.hu-theme-disc{background:radial-gradient(circle at 35% 30%,#f6dc98,#a8772f);box-shadow:0 0 14px rgba(226,176,74,.35);color:var(--inkd)}
+#huMusicToggle{background:#3b2a20;border:1px solid var(--bronze);border-radius:3px;color:var(--bone)}
+#titleVer{color:rgba(240,226,191,.6)}
+#zoneBanner{font-family:var(--ft);color:#fff1c9}
+
+/* ===== واجهة العالم ===== */
+.hudMon{border-radius:2px;background:rgba(0,0,0,.3);border:1px solid rgba(226,176,74,.28)}
+.hudMon.lead{border-color:var(--gold);background:rgba(226,176,74,.13)}
+.hudMon .hn{font-family:var(--fd)}.hudMon .hn em,.hx-no{color:var(--gold)}
+.chip{border-radius:2px;background:rgba(0,0,0,.32);border:1px solid rgba(226,176,74,.3);font-family:var(--fd)}
+.chip.gold{background:rgba(226,176,74,.18);color:var(--gold)}
+#weatherChip{background:rgba(88,179,158,.2);border-color:rgba(88,179,158,.4);color:var(--ink)}
+.hudBtns button{border-radius:3px;background:linear-gradient(#3b2a20,#251a14);border:1px solid var(--bronze);box-shadow:inset 0 0 0 1px var(--kohl);color:var(--gold)}
+.hudBtns button:hover{background:#4d382b}
+.hudBtns .lb{font-family:var(--fd);color:var(--bone);opacity:1}
+#btnParty{--ic:var(--i-shield)}#btnBag{--ic:var(--i-bag)}#btnQuest{--ic:var(--i-scroll)}#btnDex{--ic:var(--i-book)}#btnSave{--ic:var(--i-disk)}#huSocialHudButton{--ic:var(--i-folk)}
+#btnParty .ic,#btnBag .ic,#btnQuest .ic,#btnDex .ic,#btnSave .ic,#huSocialHudButton .ic{font-size:0;display:block;width:20px;height:20px;background:currentColor;-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat}
+#hudToggle,#leftToolsToggle{background:linear-gradient(#3b2a20,#251a14);border:2px solid var(--bronze);border-radius:3px;color:var(--gold);box-shadow:inset 0 0 0 1px var(--kohl),0 4px 12px #000a}
+#minimap{border:2px solid var(--bronze);border-radius:2px;box-shadow:0 0 0 2px var(--kohl),0 0 0 4px rgba(226,176,74,.45),0 8px 18px #000a}
+#mpBanner{background:rgba(27,18,14,.92);border:1px solid var(--bronze);color:var(--bone)}
+#toast{border-radius:3px;border-color:var(--gold);color:var(--bone)}
+#joystick{background:radial-gradient(circle,rgba(0,0,0,.28) 40%,rgba(226,176,74,.14) 100%);border:3px solid rgba(226,176,74,.6);box-shadow:inset 0 0 18px rgba(0,0,0,.5),0 0 0 2px rgba(18,10,7,.7)}
+#joyThumb{background:radial-gradient(circle at 35% 30%,#f6dc98,#8f6a2c);box-shadow:0 4px 10px rgba(0,0,0,.55)}
+#btnA{border:3px solid var(--gold);background:radial-gradient(circle at 35% 30%,#e8654a,#9c2c19);color:#fff1c9;font-family:var(--fd);box-shadow:0 5px 14px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.28)}
+#btnRun{border:3px solid #8fd4b4;background:radial-gradient(circle at 35% 30%,#58b39e,#1f5a4d)}
+#stam{background:rgba(27,18,14,.85);border-color:var(--bronze)}
+#stam i{background:linear-gradient(90deg,#2f7d6d,#b6dc7a)}
+
+/* ===== المعركة ===== */
+.battleName{font-family:var(--fd)}
+#enemyLevel,#playerLevel{background:var(--gold);color:var(--inkd);border-radius:2px;font-weight:800}
+.hpBar,.miniHp,.xpBar{position:relative;background:#120a07;border:1px solid var(--bronze);border-radius:1px;box-shadow:inset 0 2px 3px rgba(0,0,0,.8)}
+.hpBar::after,.miniHp::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,#0000 0 calc(10% - 1px),rgba(0,0,0,.55) calc(10% - 1px) 10%)}
+.hpBar div,.miniHp div{border-radius:0}
+.xpBar div{background:linear-gradient(90deg,#2f7d6d,#9fdcc0)}
+.tchip,.schip{border-radius:2px}
+#mainMenu button:nth-child(1){--tc:#b13a24;--ic:var(--i-sword)}#mainMenu button:nth-child(2){--tc:#b27a22;--ic:var(--i-bag)}
+#mainMenu button:nth-child(3){--tc:#2f7d6d;--ic:var(--i-ball)}#mainMenu button:nth-child(4){--tc:#6b7f33;--ic:var(--i-shield)}#mainMenu button:nth-child(5){--tc:#6e6254;--ic:var(--i-run)}
+#mainMenu button:nth-child(n)::before{content:"";display:inline-block;width:1.05em;height:1.05em;margin-inline-end:.45em;vertical-align:-.15em;background:currentColor;-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat}
+.menuGrid button{background:linear-gradient(rgba(255,235,190,.16),rgba(0,0,0,.24)),var(--tc,#3b2a20)!important;box-shadow:inset 0 0 0 2px var(--gold2),inset 0 0 0 3px var(--kohl)!important}
+#pvpResignBtn{background:#8e2a22;border-color:var(--gold);border-radius:3px}
+
+/* ===== شاشات القوائم ===== */
+select,input[type=text],input:not([type]),#nickIn,#mpScreen input,#huSocialScreen input,#huSocialScreen select,.settingsRow select{background:#1b120e;color:var(--bone);border:1px solid var(--bronze);border-radius:3px}
+.settingsRow label,#lookScreen .lkRow>label{font-family:var(--fd);color:var(--gold)}
+.hx-id,#slotScreen>.list>.card,#pcScreen .huPcCard,.hx-t,.pk,.trSide,.partyCard{background:linear-gradient(165deg,#3a2a20,#21160f);border-color:rgba(226,176,74,.34)}
+.hx-id{border:2px solid var(--bronze)}.hx-id.cur,.hx-t.sel,.pk.sel,#pcScreen .huPcCard.huPcSelected{border-color:var(--gold)!important}
+.hx-id::before{background:#120a07}
+.hx-disc,.hx-ball,#slotScreen>.list>.card img,#pcScreen .huPcCard>img{background:radial-gradient(circle at 50% 38%,rgba(226,176,74,.28),rgba(0,0,0,.25) 70%);border-color:rgba(226,176,74,.3)}
+.hx-cap{font-family:var(--fd);background:linear-gradient(rgba(226,176,74,.16),rgba(226,176,74,.04))}
+.hx-t,.hx-t.ghost,.hx-x{border-radius:3px}
+.hx-t.sel,.pk.sel{background:rgba(226,176,74,.2)}
+#slotScreen>.list>.card b{color:var(--gold)}
+#pcScreen .huPcHealthFill{background:linear-gradient(90deg,#c4442b,#e2b04a,#8fb85a)}
+.shopCategory,#shopScreen .shopStockCard .shopCategory{background:rgba(47,125,109,.2)!important;color:#b6e8d4!important;border-color:rgba(88,179,158,.35)!important}
+#trCine{background:radial-gradient(circle,#4a2a1a,#120a07 75%)}
+.hu-ability-chip{background:rgba(88,179,158,.15);border-color:rgba(88,179,158,.4);color:#c9f0e0}
+#huCine .huCineFrame,#huTutorial .huTutCard{background:#1a110d!important;border:2px solid var(--bronze)!important;border-radius:4px!important;box-shadow:inset 0 0 0 2px var(--kohl),0 30px 100px #000!important}
+#huCine .huCineCopy{background:linear-gradient(#25180f,#120a07 78%)!important;border-top:2px solid var(--bronze)!important}
+#huCineTitle,#huTutTitle{font-family:var(--ft);color:var(--gold)}
+#orientationGuard{background:radial-gradient(circle at 50% 35%,#3d2419,#0d0705 78%)}
+#huLoadCurtain{background:rgba(12,6,3,.97)}
+.hul-spin{border-color:#ffffff22;border-top-color:var(--gold);border-left-color:var(--seal)}
+</style>
 </body>
 </html>
