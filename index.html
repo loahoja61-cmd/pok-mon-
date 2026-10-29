@@ -1942,8 +1942,8 @@ function mpHandle(peerId,data){if(!data||typeof data!=='object')return;if(data.t
  if(data.type==='pvp_end'){if(state.battle?.pvp&&state.battle.pvpId===data.battleId){mpFinishPvp(data.winner===MP.id,data.winner===MP.id?'🏆 فزت!':'انتهت المعركة — فاز المنافس.');}return;}
 }
 function mpRemovePeer(id){MP.connections.delete(id);delete MP.remote[id];if(MP.mode==='host')mpBroadcastPlayers();else{MP.status='انقطع اتصال لاعب أو المضيف';mpUi();}if(state.battle?.pvp&&state.battle.pvpOpponent===id)mpFinishPvp(true,'انقطع اتصال المنافس؛ احتُسب ذلك انسحابًا.');}
-function mpShow(){if(!$('mpName').value.trim())$('mpName').value=MP.name||localStorage.getItem('horizon_mp_name')||'مدرب';mpEl.classList.remove('hidden');mpUi();}
-function mpClose(){mpEl.classList.add('hidden');}
+function mpShow(){if(!$('mpName').value.trim())$('mpName').value=MP.name||localStorage.getItem('horizon_mp_name')||'مدرب';mpEl.style.removeProperty('display');mpEl.removeAttribute('aria-hidden');mpEl.classList.remove('hidden');mpUi();}
+function mpClose(){mpEl.classList.add('hidden');mpEl.setAttribute('aria-hidden','true');mpEl.style.display='none';}
 function mpLoadPeer(){if(window.Peer)return Promise.resolve(true);return new Promise(resolve=>{let s=document.querySelector('script[data-peerjs-fallback]');if(s){s.addEventListener('load',()=>resolve(!!window.Peer),{once:true});s.addEventListener('error',()=>resolve(false),{once:true});return;}s=document.createElement('script');s.src='https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js';s.dataset.peerjsFallback='1';s.onload=()=>resolve(!!window.Peer);s.onerror=()=>resolve(false);document.head.appendChild(s);});}
 function mpClearNetwork(){try{MP.connections.forEach(c=>c.close());}catch(e){}MP.connections.clear();try{if(MP.peer&&!MP.peer.destroyed)MP.peer.destroy();}catch(e){}MP.peer=null;MP.id='';MP.mode='';MP.hostId='';MP.roomCode='';MP.remote={};MP.pendingInvite=null;MP.pendingOutgoing=null;MP.status='غير متصل';mpUi();}
 async function mpHost(){MP.name=mpSafeName($('mpName').value||'مدرب');localStorage.setItem('horizon_mp_name',MP.name);if(!state.started){toast('ابدأ لعبة واختر وحشًا أولًا، ثم أنشئ الغرفة.');mpClose();renderSlots('new');toast('اختر خانة للعبة جديدة ثم أنشئ الغرفة');return;}if(MP.peer){toast('أنت متصل بالفعل؛ اقطع الاتصال أولًا لتغيير الغرفة.');return;}MP.status='جار إنشاء الغرفة...';MP.mode='host';mpUi();if(!await mpLoadPeer()){MP.status='تعذّر تحميل PeerJS. تأكد من اتصال الإنترنت ثم أعد المحاولة.';mpUi();return;}try{const p=new Peer();MP.peer=p;p.on('open',id=>{MP.id=id;MP.roomCode=id;MP.status='الغرفة جاهزة! أرسل كود الغرفة لصديقك.';mpUi();mpBroadcastPlayers();});p.on('connection',c=>mpAttach(c));p.on('error',e=>{MP.status='تعذّر الاتصال: '+(e?.type||e?.message||'خطأ شبكي');mpUi();toast(MP.status,4500);});p.on('disconnected',()=>{MP.status='انقطع اتصال الإشارة؛ حاول قطع الاتصال وإنشاء غرفة جديدة.';mpUi();});}catch(e){MP.status='فشل إنشاء الغرفة: '+e.message;mpUi();}}
@@ -8892,6 +8892,12 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden!important;overscr
 </script>
 
 
+<style id="hu-v102-multiplayer-hidden-fix">
+/* v102: the v100 #mpScreen display:flex!important overrode .hidden,
+   making the multiplayer panel visible at startup and impossible to hide. */
+#mpScreen.hidden{display:none!important;visibility:hidden!important;pointer-events:none!important;}
+#mpScreen:not(.hidden){display:flex!important;visibility:visible!important;pointer-events:auto!important;}
+</style>
 <style id="hu-v100-multiplayer-scroll-fix">
 /* v100: restore vertical touch scrolling in the multiplayer overlay. */
 #mpScreen{
